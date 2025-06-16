@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { supabase } from "../../lib/db";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,67 +12,79 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default async function HomePage() {
-  const { count } = await supabase
-    .from("vocab")
-    .select("*", { count: "exact", head: true });
+function toCapitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-  if (!count || count === 0) {
-    return <div>No data found. Come back later.</div>;
-  }
+export default function HomePage() {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const randomOffset = Math.floor(Math.random() * count);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/generate-vocab");
+      const data = await res.json();
+      setData(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setLoading(false);
+  };
 
-  const { data, error } = await supabase
-    .from("vocab")
-    .select("*")
-    .range(randomOffset, randomOffset);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  function toCapitalize(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  const vocab = data[0];
 
   return (
     <main>
       <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-950 p-4">
         <Card className="px-4 min-w-50">
-          <CardHeader>
-            <CardTitle>{toCapitalize(data[0].word)}</CardTitle>
-            <CardDescription>
-              {data[0].phonetic
-                ? data[0].phonetic
-                : "No phonetic reading available"}
-            </CardDescription>
-          </CardHeader>
-          <p className="px-6">Definitions: </p>
-          {data[0].part_of_speech.map((part: string, index: number) => (
-            <React.Fragment key={index}>
-              <CardContent>
-                <p>
-                  {++index}. As {part === "adjective" ? "an" : "a"}{" "}
-                  <strong>{part}</strong>
-                </p>
-              </CardContent>
-              <CardFooter>
-                <p>
-                  {data[0].definitions[index]
-                    ? data[0].definitions[index]
-                    : "No definition available."}
-                </p>
-              </CardFooter>
-            </React.Fragment>
-          ))}
+          {vocab && (
+            <>
+              <CardHeader>
+                <CardTitle>
+                  {loading
+                    ? "Loading..."
+                    : vocab
+                    ? toCapitalize(vocab.word)
+                    : "No data found"}
+                </CardTitle>
+                <CardDescription>
+                  {vocab.phonetic
+                    ? vocab.phonetic
+                    : "No phonetic reading available"}
+                </CardDescription>
+              </CardHeader>
+              <p className="px-6">Definitions: </p>
+              {vocab.part_of_speech?.map((part: string, index: number) => (
+                <div key={index}>
+                  <CardContent>
+                    <p>
+                      {++index}. As {part === "adjective" ? "an " : "a "}
+                      <strong>{part}</strong>
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <p className="break-words whitespace-pre-line">
+                      {vocab.definitions?.[index]}
+                    </p>
+                  </CardFooter>
+                </div>
+              ))}
+            </>
+          )}
         </Card>
         <Button
-          asChild
           size="lg"
           className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+          onClick={fetchData}
+          disabled={loading}
         >
-          <a href="/generate">Generate more!</a>
+          {loading ? "Loading..." : "Generate more!"}
         </Button>
       </div>
     </main>
