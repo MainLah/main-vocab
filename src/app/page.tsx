@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AuthButton } from "@/components/AuthButton";
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
           >
             <a href="/generate">Start Generating!</a>
           </Button>
+          <AuthButton className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"></AuthButton>
         </CardContent>
       </Card>
     </main>
