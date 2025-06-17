@@ -42,7 +42,7 @@ export default function HomePage() {
   return (
     <main>
       <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-950 p-4">
-        <Card className="px-4 min-w-50">
+        <Card className="px-4 min-w-50 rounded-xl">
           {vocab && (
             <>
               <CardHeader>
