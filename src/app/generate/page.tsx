@@ -11,14 +11,38 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import type { APIResponse } from "@/types/type";
+import { useSession } from "next-auth/react";
 
 function toCapitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export default function HomePage() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<APIResponse[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { data: session } = useSession();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleFavorite = async () => {
+    if (!session) return;
+    if (isFavorite) {
+      await fetch("/api/favorites", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vocab_id: data[0].id }),
+      });
+      setIsFavorite(false);
+    } else {
+      await fetch("/api/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vocab_id: data[0].id }),
+      });
+      setIsFavorite(true);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -76,6 +100,15 @@ export default function HomePage() {
                 </div>
               ))}
             </>
+          )}
+          {session && (
+            <Button
+              variant={isFavorite ? "destructive" : "default"}
+              onClick={handleFavorite}
+              className="mt-2"
+            >
+              {isFavorite ? "Unfavorite" : "Favorite"}
+            </Button>
           )}
         </Card>
         <Button

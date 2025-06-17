@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -7,10 +9,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { APIResponse } from "@/types/type";
 
 const ProfilePage = () => {
+  const [favorites, setFavorites] = useState<APIResponse[]>([]);
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!session) return;
+
+    const fetchFavorites = async () => {
+      const res = await fetch("/api/favorites");
+      const data = await res.json();
+      const vocabData = await Promise.all(
+        data.data.map(async (fav: { vocab_id: number }) => {
+          const res = await fetch(`/api/vocab/${fav.vocab_id}`);
+          return res.json();
+        })
+      );
+      setFavorites(vocabData);
+    };
+    fetchFavorites();
+  }, [session]);
 
   if (status === "loading")
     return (
@@ -44,7 +65,13 @@ const ProfilePage = () => {
             </div>
           </CardHeader>
         </Card>
-        <div className="h-[1000px]"></div>
+        <div className="min-h-screen">
+          {favorites.map((vocab, index) => (
+            <li key={index} className="text-neutral-100">
+              {vocab.word}
+            </li>
+          ))}
+        </div>
       </div>
     );
   } else {
