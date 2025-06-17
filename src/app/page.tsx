@@ -8,7 +8,7 @@ import { AuthButton } from "@/components/AuthButton";
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-neutral-950 px-4">
-      <Card className="w-full max-w-2xl bg-neutral-900 border-none shadow-xl">
+      <Card className="w-full max-w-2xl bg-neutral-900 border-none shadow-xl rounded-xl">
         <CardContent className="flex flex-col items-center py-16 gap-6">
           <Badge className="bg-neutral-800 text-neutral-200 text-base px-4 py-1 rounded-full mb-2">
             Welcome
