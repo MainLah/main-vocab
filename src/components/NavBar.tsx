@@ -98,23 +98,17 @@ const Navbar1 = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="max-h-8" alt={logo.alt} />
-            </a>
+            <div></div>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
+              <SheetHeader className="hidden">
+                <SheetTitle>Main Vocabulary</SheetTitle>
+              </SheetHeader>
               <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      <img src={logo.src} className="max-h-8" alt={logo.alt} />
-                    </a>
-                  </SheetTitle>
-                </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
                   <Accordion
                     type="single"
@@ -125,12 +119,7 @@ const Navbar1 = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
-                    </Button>
+                    <AuthButton className="rounded-lg px-8 text-sm bg-neutral-800 text-neutral-100 hover:bg-neutral-700"></AuthButton>
                   </div>
                 </div>
               </SheetContent>
