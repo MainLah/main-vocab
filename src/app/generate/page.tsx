@@ -114,7 +114,7 @@ export default function HomePage() {
               <Button
                 variant={isFavorite ? "destructive" : "default"}
                 onClick={handleFavorite}
-                className="mt-2"
+                className="mt-2 cursor-pointer"
               >
                 {isFavorite ? "Unfavorite" : "Favorite"}
               </Button>
@@ -122,7 +122,7 @@ export default function HomePage() {
           </Card>
           <Button
             size="lg"
-            className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+            className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700 cursor-pointer"
             onClick={fetchData}
             disabled={loading}
           >

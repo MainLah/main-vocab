@@ -67,7 +67,7 @@ const ProfilePage = () => {
       <>
         <Navbar1></Navbar1>
         <div className="min-h-screen md:flex md:gap-4 bg-neutral-950 pt-5">
-          <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/4 md:sticky md:left-0 md:top-0 md:py-24">
+          <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/4 md:sticky md:left-0 mt-10 md:top-0 md:py-24">
             <h1 className="text-neutral-100 text-4xl text-center p-0 m-0 md:pb-10 hidden md:block">
               Profile
             </h1>

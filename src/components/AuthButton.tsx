@@ -12,13 +12,19 @@ export function AuthButton({ className = "" }: AuthButtonProps) {
 
   if (session) {
     return (
-      <Button onClick={() => signOut()} className={className}>
+      <Button
+        onClick={() => signOut()}
+        className={className + " cursor-pointer"}
+      >
         Sign out
       </Button>
     );
   }
   return (
-    <Button onClick={() => signIn("discord")} className={className}>
+    <Button
+      onClick={() => signIn("discord")}
+      className={className + " cursor-pointer"}
+    >
       Sign in with Discord
     </Button>
   );
