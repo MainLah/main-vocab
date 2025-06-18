@@ -27,7 +27,7 @@ export default function Home() {
           >
             <a href="/generate">Start Generating!</a>
           </Button>
-          <AuthButton className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"></AuthButton>
+          <AuthButton className="rounded-lg px-8 text-lg mt-4 bg-neutral-800 text-neutral-100 hover:bg-neutral-700 cursor-pointer"></AuthButton>
         </CardContent>
       </Card>
     </main>

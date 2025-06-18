@@ -10,6 +10,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
+  CardAction,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { APIResponse } from "@/types/type";
@@ -36,6 +37,21 @@ const ProfilePage = () => {
     fetchFavorites();
   }, [session]);
 
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await fetch("/api/favorites", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vocab_id: id }),
+      });
+      if (res.ok) {
+        setFavorites(favorites.filter((e) => e.id !== id));
+      }
+    } catch (error) {
+      return <div>ERROR: {(error as unknown as Error).message}</div>;
+    }
+  };
+
   if (status === "loading")
     return (
       <div className="h-screen flex justify-center items-center">
@@ -48,7 +64,7 @@ const ProfilePage = () => {
   if (session) {
     return (
       <div className="min-h-screen md:flex md:gap-4 bg-neutral-950 ">
-        <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/3 md:sticky md:left-0 md:top-0 md:py-24">
+        <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/4 md:sticky md:left-0 md:top-0 md:py-24">
           <h1 className="text-neutral-100 text-4xl text-center p-0 m-0 md:pb-10 hidden md:block">
             Profile
           </h1>
@@ -69,7 +85,7 @@ const ProfilePage = () => {
           </CardHeader>
         </Card>
         <div className="min-h-screen flex flex-col justify-center">
-          <h1 className="text-neutral-100 text-4xl py-4 m-4 md:m-0">
+          <h1 className="text-neutral-100 text-3xl md:text-4xl py-4 m-4 md:m-0">
             Your Favorite Words :
           </h1>
           <div className="md:flex md:flex-wrap md:gap-5">
@@ -87,6 +103,18 @@ const ProfilePage = () => {
                           ? vocab.phonetic
                           : "No phonetic reading available"}
                       </CardDescription>
+                      <CardAction>
+                        <Button
+                          className="cursor-pointer"
+                          onClick={() => handleDelete(vocab.id)}
+                        >
+                          <img
+                            className="invert w-4"
+                            src="/delete-svgrepo-com.svg"
+                            alt="Delete"
+                          />
+                        </Button>
+                      </CardAction>
                     </CardHeader>
                     <p className="px-6">Definitions: </p>
                     {vocab.part_of_speech?.map(
