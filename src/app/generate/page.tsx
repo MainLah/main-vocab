@@ -50,7 +50,13 @@ export default function HomePage() {
       const res = await fetch("/api/generate-vocab");
       const data = await res.json();
       setData(data);
-      console.log(data);
+      const checkFavorite = await fetch(`/api/check-favorite/${data[0].id}`);
+      const dataFavorite = await checkFavorite.json();
+      if (dataFavorite.isFavorite) {
+        setIsFavorite(true);
+      } else {
+        setIsFavorite(false);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }

@@ -8,7 +8,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import type { APIResponse } from "@/types/type";
 
 const ProfilePage = () => {
@@ -44,8 +47,8 @@ const ProfilePage = () => {
 
   if (session) {
     return (
-      <div className="min-h-screen md:flex bg-neutral-950 ">
-        <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:w-1/3 md:sticky md:left-0 md:top-0 md:py-24">
+      <div className="min-h-screen md:flex md:gap-4 bg-neutral-950 ">
+        <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/3 md:sticky md:left-0 md:top-0 md:py-24">
           <h1 className="text-neutral-100 text-4xl text-center p-0 m-0 md:pb-10 hidden md:block">
             Profile
           </h1>
@@ -65,12 +68,50 @@ const ProfilePage = () => {
             </div>
           </CardHeader>
         </Card>
-        <div className="min-h-screen">
-          {favorites.map((vocab, index) => (
-            <li key={index} className="text-neutral-100">
-              {vocab.word}
-            </li>
-          ))}
+        <div className="min-h-screen flex flex-col justify-center">
+          <h1 className="text-neutral-100 text-4xl py-4 m-4 md:m-0">
+            Your Favorite Words :
+          </h1>
+          <div className="md:flex md:flex-wrap md:gap-5">
+            {favorites.map((vocab) => (
+              <Card
+                className="p-4 min-w-50 rounded-xl m-4 md:m-0"
+                key={vocab.id}
+              >
+                {vocab && (
+                  <>
+                    <CardHeader>
+                      <CardTitle>{vocab.word}</CardTitle>
+                      <CardDescription>
+                        {vocab.phonetic
+                          ? vocab.phonetic
+                          : "No phonetic reading available"}
+                      </CardDescription>
+                    </CardHeader>
+                    <p className="px-6">Definitions: </p>
+                    {vocab.part_of_speech?.map(
+                      (part: string, index: number) => (
+                        <div key={index}>
+                          <CardContent>
+                            <p>
+                              {++index}. As{" "}
+                              {part === "adjective" ? "an " : "a "}
+                              <strong>{part}</strong>
+                            </p>
+                          </CardContent>
+                          <CardFooter>
+                            <p className="break-words whitespace-pre-line">
+                              {vocab.definitions?.[index]}
+                            </p>
+                          </CardFooter>
+                        </div>
+                      )
+                    )}
+                  </>
+                )}
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
