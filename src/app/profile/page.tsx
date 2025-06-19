@@ -19,6 +19,7 @@ import { Navbar1 } from "@/components/NavBar";
 const ProfilePage = () => {
   const [favorites, setFavorites] = useState<APIResponse[]>([]);
   const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const ProfilePage = () => {
           return res.json();
         })
       );
+      setIsLoading(false);
       setFavorites(vocabData);
     };
     fetchFavorites();
@@ -67,7 +69,7 @@ const ProfilePage = () => {
       <>
         <Navbar1></Navbar1>
         <div className="min-h-screen md:flex md:gap-4 bg-neutral-950 pt-5">
-          <Card className="md:h-screen bg-neutral-900 border-none shadow-xl md:min-w-1/4 md:sticky md:left-0 mt-10 md:top-0 md:py-24">
+          <Card className="bg-neutral-900 border-none shadow-xl md:min-w-1/4 md:sticky md:left-0 mt-10 md:top-0 md:py-24">
             <h1 className="text-neutral-100 text-4xl text-center p-0 m-0 md:pb-10 hidden md:block">
               Profile
             </h1>
@@ -87,61 +89,79 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
           </Card>
-          <div className="min-h-screen flex flex-col justify-center">
-            <h1 className="text-neutral-100 text-3xl md:text-4xl py-4 m-4 md:m-0">
-              Your Favorite Words :
-            </h1>
+          <div className="min-h-full flex flex-col justify-center">
+            {favorites.length > 0 && (
+              <h1 className="text-neutral-100 text-3xl md:text-4xl py-4 md:pt-20 m-4 md:m-0">
+                Your Favorite Words :
+              </h1>
+            )}
             <div className="md:flex md:flex-wrap md:gap-5">
-              {favorites.map((vocab) => (
-                <Card
-                  className="p-4 min-w-50 rounded-xl m-4 md:m-0"
-                  key={vocab.id}
-                >
-                  {vocab && (
-                    <>
-                      <CardHeader>
-                        <CardTitle>{vocab.word}</CardTitle>
-                        <CardDescription>
-                          {vocab.phonetic
-                            ? vocab.phonetic
-                            : "No phonetic reading available"}
-                        </CardDescription>
-                        <CardAction>
-                          <Button
-                            className="cursor-pointer"
-                            onClick={() => handleDelete(vocab.id)}
-                          >
-                            <img
-                              className="invert w-4"
-                              src="/delete-svgrepo-com.svg"
-                              alt="Delete"
-                            />
-                          </Button>
-                        </CardAction>
-                      </CardHeader>
-                      <p className="px-6">Definitions: </p>
-                      {vocab.part_of_speech?.map(
-                        (part: string, index: number) => (
-                          <div key={index}>
-                            <CardContent>
-                              <p>
-                                {++index}. As{" "}
-                                {part === "adjective" ? "an " : "a "}
-                                <strong>{part}</strong>
-                              </p>
-                            </CardContent>
-                            <CardFooter>
-                              <p className="break-words whitespace-pre-line">
-                                {vocab.definitions?.[index]}
-                              </p>
-                            </CardFooter>
-                          </div>
-                        )
-                      )}
-                    </>
-                  )}
-                </Card>
-              ))}
+              {isLoading ? (
+                <div>
+                  <h1 className="scroll-m-20 text-center text-xl tracking-tight text-balance text-neutral-100">
+                    Loading your favorites...
+                  </h1>
+                </div>
+              ) : favorites.length > 0 ? (
+                favorites.map((vocab) => (
+                  <Card
+                    className="p-4 min-w-50 rounded-xl m-4 md:m-0"
+                    key={vocab.id}
+                  >
+                    {vocab && (
+                      <>
+                        <CardHeader>
+                          <CardTitle>{vocab.word}</CardTitle>
+                          <CardDescription>
+                            {vocab.phonetic
+                              ? vocab.phonetic
+                              : "No phonetic reading available"}
+                          </CardDescription>
+                          <CardAction>
+                            <Button
+                              className="cursor-pointer"
+                              onClick={() => handleDelete(vocab.id)}
+                            >
+                              <img
+                                className="invert w-4"
+                                src="/delete-svgrepo-com.svg"
+                                alt="Delete"
+                              />
+                            </Button>
+                          </CardAction>
+                        </CardHeader>
+                        <p className="px-6">Definitions: </p>
+                        {vocab.part_of_speech?.map(
+                          (part: string, index: number) => (
+                            <div key={index}>
+                              <CardContent>
+                                <p>
+                                  {index + 1}. As{" "}
+                                  {part === "adjective" ? "an " : "a "}
+                                  <strong>{part}</strong>
+                                </p>
+                              </CardContent>
+                              <CardFooter>
+                                <p className="break-words whitespace-pre-line">
+                                  {vocab.definitions?.[index]
+                                    ? vocab.definitions?.[index]
+                                    : "No definition available"}
+                                </p>
+                              </CardFooter>
+                            </div>
+                          )
+                        )}
+                      </>
+                    )}
+                  </Card>
+                ))
+              ) : (
+                <div className="flex flex-1 items-center justify-center min-h-[300px]">
+                  <h1 className="text-neutral-100 mx-4 md:m-0 text-center">
+                    You have no favorite words yet. Start adding some to learn!
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
         </div>
