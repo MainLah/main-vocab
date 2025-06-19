@@ -97,13 +97,15 @@ export default function HomePage() {
                   <div key={index}>
                     <CardContent>
                       <p>
-                        {++index}. As {part === "adjective" ? "an " : "a "}
+                        {index + 1}. As {part === "adjective" ? "an " : "a "}
                         <strong>{part}</strong>
                       </p>
                     </CardContent>
                     <CardFooter>
                       <p className="break-words whitespace-pre-line">
-                        {vocab.definitions?.[index]}
+                        {vocab.definitions?.[index]
+                          ? vocab.definitions?.[index]
+                          : "No definition available"}
                       </p>
                     </CardFooter>
                   </div>
