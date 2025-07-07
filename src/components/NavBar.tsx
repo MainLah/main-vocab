@@ -53,12 +53,6 @@ interface Navbar1Props {
 }
 
 const Navbar1 = ({
-  logo = {
-    url: "https://www.shadcnblocks.com",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    alt: "logo",
-    title: "Shadcnblocks.com",
-  },
   menu = [
     { title: "Home", url: "/" },
     {
@@ -70,10 +64,6 @@ const Navbar1 = ({
       url: "/profile",
     },
   ],
-  auth = {
-    login: { title: "Login", url: "#" },
-    signup: { title: "Sign up", url: "#" },
-  },
 }: Navbar1Props) => {
   return (
     <section className="fixed top-0 w-full bg-white py-4 z-40">
